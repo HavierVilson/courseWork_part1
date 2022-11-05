@@ -4,9 +4,7 @@ public class Main {
         EmployeeBook employeeBook = new EmployeeBook(3);
         employeeBook.addEmployee();
         employeeBook.addEmployee();
-        employeeBook.addEmployee();
-        employeeBook.printEmployeeBook();
-        employeeBook.changeEmployee();
-        employeeBook.printEmployeeByDepartment();
+        employeeBook.printAllSalary();
+        employeeBook.findAverageSalary();
     }
 }

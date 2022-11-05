@@ -66,11 +66,18 @@ public class EmployeeBook {
         Scanner in = new Scanner(System.in); //Создал сканер
         System.out.print("\nВведите номер сотрудника для удаления: ");
         int a = in.nextInt();
-        array[a - 1] = null; //Номер сотрудника начинается с 1, не с 0 как в массиве
+        try {
+            if (a < 0 || a > array.length) {
+                throw new Exception("\nОшибка! Вы ввели неверное значение!");
+            }
+            array[a - 1] = null;//Номер сотрудника начинается с 1, не с 0 как в массиве
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
         System.out.println("Ячейка сотрудника была удалена");
     }
 
-    public void findAllSalary() { //Поиск суммы всех зарплат
+    public double printAllSalary() { //Поиск суммы всех зарплат UPD: В таком свариаенте можно использрвть этот метод?
         double sum = 0;
         for (Employee e : array) {
             if (e != null) {
@@ -78,12 +85,13 @@ public class EmployeeBook {
             }
         }
         System.out.println("\nСумма всех зарплат: " + sum + " рублей.");
+        return sum;
     }
 
     public void findMinSalary() { //Поиск минимальной зарплаты
         double min = array[0].getSalary();
         for (Employee e : array) {
-            if (e.getSalary() < min && e != null) {
+            if (e != null && e.getSalary() < min) {
                 min = e.getSalary();
             }
         }
@@ -93,7 +101,7 @@ public class EmployeeBook {
     public void findMaxSalary() {  // Поиск максимальной зарплаты
         double max = array[0].getSalary();
         for (Employee e : array) {
-            if (e.getSalary() > max && e != null) ;
+            if (e != null && e.getSalary() > max) ;
             {
                 max = e.getSalary();
             }
@@ -102,14 +110,13 @@ public class EmployeeBook {
     }
 
     public void findAverageSalary() { // Поиск середней суммы заработной платы
-        int sum = 0;
+        int counter = 0;
         for (Employee e : array) {
             if (e != null) {
-                sum += e.getSalary();
+                counter++;
             }
         }
-        int result = sum / array.length;
-        System.out.println("\nСредняя зарплата равна: " + result + " рублей.");
+        System.out.println("\nСредняя зарплата равна: " + (printAllSalary() / counter) + " рублей.");
     }
 
     public void printOnlyFullName() { // Метод для вывода ФИО
@@ -131,7 +138,7 @@ public class EmployeeBook {
     public void findMinSalaryInDepartment(int department) { // Поиск минимальной зарплаты по отделу
         double min = 999_999_999;
         for (Employee e : array) {
-            if (e.getDepartment() == department) {
+            if (e != null && e.getDepartment() == department) {
                 if (e.getSalary() < min) {
                     min = e.getSalary();
                 }
@@ -143,7 +150,7 @@ public class EmployeeBook {
     public void findMaxSalaryInDepartment(int department) { // Поиск максимальной зарплаты по отделу
         double max = -1;
         for (Employee e : array) {
-            if (e.getDepartment() == department) {
+            if (e != null && e.getDepartment() == department) {
                 if (e.getSalary() > max) {
                     max = e.getSalary();
                 }
@@ -155,7 +162,7 @@ public class EmployeeBook {
     public void findAllSalaryInDepartment(int department) { // Поиск суммы зарплат по отделу
         double sum = 0;
         for (Employee e : array) {
-            if (e.getDepartment() == department) {
+            if (e != null && e.getDepartment() == department) {
                 sum += e.getSalary();
             }
         }
@@ -165,7 +172,7 @@ public class EmployeeBook {
     public void findAverageSalaryInDepartment(int department) { // Поиск средней зарплаты по отделу
         int counter = 0, sum = 0;
         for (Employee e : array) {
-            if (e.getDepartment() == department) {
+            if (e != null && e.getDepartment() == department) {
                 counter++;
                 sum += e.getSalary();
             }
@@ -177,7 +184,7 @@ public class EmployeeBook {
     public void printEmployeeInDepartment(int department) { // Выводит список сотрудников отдела
         System.out.println("\nСотрудники отдела " + department + ":");
         for (Employee e : array) {
-            if (e.getDepartment() == department) {
+            if (e != null && e.getDepartment() == department) {
                 System.out.print("\nФИО сотрудника: " + e.getLastName() + " " + e.getFirstName() + " " + e.getMiddleName() + "." + "  Зарплата: " + e.getSalary() + " рублей.");
             }
         }
@@ -185,7 +192,7 @@ public class EmployeeBook {
 
     public void indexSalaryInDepartment(int department, double percent) { // Индексация зарплат в депертаменте
         for (Employee e : array) {
-            if (e.getDepartment() == department) {
+            if (e != null && e.getDepartment() == department) {
                 e.setSalary(e.getSalary() + e.getSalary() * (percent / 100));
             }
         }
@@ -195,7 +202,7 @@ public class EmployeeBook {
         for (int i = 1; i <= 5; i++) {
             int stop = 0;
             for (Employee e : array) {
-                if (e.getDepartment() == i) {
+                if (e != null && e.getDepartment() == i) {
                     if (stop < i) {
                         System.out.println("\nВ департаменте " + i + " работают:");
                     }
@@ -211,10 +218,10 @@ public class EmployeeBook {
         int id = in.nextInt();
         System.out.print("\nКакая зарабатная блата должны быть у сотрудника? - ");
         double newSalary = in.nextDouble();
-        array[id-1].setSalary(newSalary);
+        array[id - 1].setSalary(newSalary);
         System.out.print("\n В каком отделе должен работать сотрудник? - ");
         int department = in.nextInt();
-        array[id-1].setDepartment(department);
+        array[id - 1].setDepartment(department);
         System.out.print("\nИзменение сотрудника завершено!");
     }
 }
